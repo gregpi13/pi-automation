@@ -22,3 +22,4 @@ exec-approvals.json
 # OS files
 .DS_Store
 Thumbs.db
+make_call.js

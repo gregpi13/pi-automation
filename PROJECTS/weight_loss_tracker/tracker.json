@@ -1,0 +1,130 @@
+{
+  "startDate": "2026-04-07",
+  "endDate": "2026-04-20",
+  "targetWeightLossLbs": 10,
+  "currentWeightLbs": 194.2,
+  "targetWeightLbs": 186,
+  "entries": [
+    {
+      "date": "2026-04-07",
+      "weight": 196,
+      "workout_completed": true,
+      "workout_type": "strength training",
+      "duration_minutes": 45,
+      "notes": "Bench press 2x15 30lb, overhead shoulder 2x15 20lb, biceps 2x15 20lb, back rows 2x15 20lb, squats 2x20 20lb kettlebell, 31 pushups, 23min light cardio 110bpm"
+    },
+    {
+      "date": "2026-04-08",
+      "weight": 195,
+      "workout_completed": true,
+      "workout_type": "strength + cardio",
+      "duration_minutes": 50,
+      "notes": "20min bike, 31 pushups, strength training 3x15 (bench 30lb, shoulder 20lb, biceps 20lb, rows 20lb, squats 20lb kettlebell), 6700 steps"
+    },
+    {
+      "date": "2026-04-09",
+      "weight": 195,
+      "workout_completed": true,
+      "workout_type": "cardio + pushups (rest from weights)",
+      "duration_minutes": 35,
+      "notes": "30min bike, 32 pushups, rest day from weights but active"
+    },
+    {
+      "date": "2026-04-10",
+      "weight": null,
+      "workout_completed": false,
+      "workout_type": null,
+      "duration_minutes": null,
+      "notes": "Day 4: 31 pushups, rest day"
+    },
+    {
+      "date": "2026-04-11",
+      "weight": 195,
+      "workout_completed": true,
+      "workout_type": "strength training",
+      "duration_minutes": 40,
+      "notes": "31 pushups, 3min bike warmup, 3 sets: bench press 30lb, overhead shoulder 20lb, biceps 20lb, back rows 20lb, squats 20lb kettlebell"
+    },
+    {
+      "date": "2026-04-12",
+      "weight": 195.5,
+      "workout_completed": true,
+      "workout_type": "strength training",
+      "duration_minutes": 40,
+      "notes": "Day 6: 195.5 lbs, 30 min bike, 3 sets every exercise (bench 30lb, shoulder 20lb, biceps 20lb, rows 20lb, squats 20lb kettlebell)"
+    },
+    {
+      "date": "2026-04-12-evening",
+      "weight": null,
+      "workout_completed": true,
+      "workout_type": "strength training",
+      "duration_minutes": 35,
+      "notes": "Day 6 EXTRA: 3 sets of everything - bench press 30lb, overhead shoulder 20lb, biceps 20lb, back rows 20lb. No legs, no bike."
+    },
+    {
+      "date": "2026-04-13",
+      "weight": 195.5,
+      "workout_completed": true,
+      "workout_type": "cardio",
+      "duration_minutes": 25,
+      "notes": "Day 7: Rest day from weights, 25 min bike"
+    },
+    {
+      "date": "2026-04-14",
+      "weight": 194.8,
+      "workout_completed": true,
+      "workout_type": "strength + cardio",
+      "duration_minutes": 45,
+      "notes": "Day 8: 194.8 lbs, 23 min bike, 3x15 bench press 30lb, 2x15 everything else (shoulder 20lb, biceps 20lb, rows 20lb), 31 pushups"
+    },
+    {
+      "date": "2026-04-15",
+      "weight": 194.6,
+      "workout_completed": true,
+      "workout_type": "cardio",
+      "duration_minutes": 25,
+      "notes": "Day 9: 194.6 lbs, 25 min bike, 31 pushups, rest day from weights"
+    },
+    {
+      "date": "2026-04-16",
+      "weight": 194.2,
+      "workout_completed": true,
+      "workout_type": "strength + cardio",
+      "duration_minutes": 40,
+      "notes": "Day 10: 194.2 lbs, 25 min bike, 2x15 all weight exercises (bench, shoulder, biceps, rows, squats)"
+    },
+    {
+      "date": "2026-04-17",
+      "weight": null,
+      "workout_completed": true,
+      "workout_type": "cardio + pushups",
+      "duration_minutes": 35,
+      "notes": "Day 11: 31 pushups, 30 min bike, no weigh-in"
+    },
+    {
+      "date": "2026-04-18",
+      "weight": 194.4,
+      "workout_completed": true,
+      "workout_type": "strength + cardio + core (2 sessions)",
+      "duration_minutes": 75,
+      "notes": "Day 12: 194.4 lbs, MORNING: 25 min bike, 2x15 all weight exercises, 31 pushups, 20 deadbug. EVENING: Second weight session - 2x15 bench press 30lb, shoulder 20lb, biceps 20lb, back rows 20lb, kettlebell squats 20lb"
+    },
+    {
+      "date": "2026-04-19",
+      "weight": 195,
+      "workout_completed": true,
+      "workout_type": "strength + cardio + core + walk",
+      "duration_minutes": 75,
+      "notes": "Day 13: 195 lbs (big meal yesterday), 25 min bike, 25 min walk, 2x15 all weight exercises, 31 pushups, 20 dead bugs. FINAL DAY TOMORROW!"
+    },
+    {
+      "date": "2026-04-20",
+      "weight": null,
+      "workout_completed": true,
+      "workout_type": "cardio + pushups (rest from weights)",
+      "duration_minutes": 35,
+      "notes": "Day 14 (FINAL DAY): 31 pushups, 30 min bike, rest day from weights. 14-day challenge COMPLETE!"
+    }
+  ],
+  "status": "active"
+}

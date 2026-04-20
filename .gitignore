@@ -1,0 +1,24 @@
+# .gitignore for OpenClaw workspace
+# Prevent sensitive files from being committed
+
+# Credentials
+*.password
+*.secret
+*.key
+.credentials/
+credentials/
+
+# Config files with secrets
+.env
+.env.local
+
+# Logs
+*.log
+/tmp/
+
+# Runtime files
+exec-approvals.json
+
+# OS files
+.DS_Store
+Thumbs.db

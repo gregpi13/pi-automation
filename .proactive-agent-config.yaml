@@ -1,0 +1,115 @@
+# Proactive Agent Configuration - STRICT MODE
+# This file overrides default proactive behavior with safety-first settings
+
+---
+# AUTONOMY LEVEL: FULL
+# "Full" means: Can act on most tasks without approval
+# EXCEPTION: Email sending still requires explicit approval per user request
+
+autonomy_level: "full"  # Options: strict_approval, suggest_only, limited, full
+
+# AUTONOMY LEVEL: LIMITED
+# "Limited" means: Can act on internal/workspace tasks without approval
+# Must still ask for: External actions (email, web POST, system changes)
+
+# ALWAYS REQUIRE EXPLICIT APPROVAL (per user request):
+require_explicit_approval:
+  - send_email          # User requested: ALWAYS ask before sending emails
+
+# CAN ACT WITHOUT APPROVAL (but will report after):
+autonomous_actions:
+  - external_api_call   # Data leaving the machine
+  - modify_system_config # System-level changes
+  - install_skill       # New capabilities
+  - update_skill        # Changing existing capabilities
+  - browser_automation    # External site interaction
+
+# CAN ACT WITHOUT APPROVAL (internal workspace operations):
+allowed_without_approval:
+  - read_files          # Reading any files
+  - write_files         # Writing/modifying files in workspace
+  - delete_files        # Deleting files in workspace
+  - execute_safe_commands # grep, ls, cat, etc.
+  - search_memory       # Memory queries
+  - check_weather       # Local weather fetch
+  - read_calendar       # Local calendar read
+  - generate_summary    # Internal processing
+  - update_configs      # Files like this one
+
+# NOTIFICATION SETTINGS
+proactive_suggestions:
+  enabled: true
+  delivery: "ask_first"  # Never auto-execute
+  format: "proposal_with_confirmation"
+
+# BOUNDARIES
+boundaries:
+  max_proactive_suggestions_per_day: 5
+  require_approval_for_new_patterns: true
+  log_all_autonomous_actions: true
+  user_veto_always_respected: true
+
+# SAFETY GUARDRAILS
+guardrails:
+  never_execute_without_confirmation: true
+  always_show_intent_before_action: true
+  allow_user_override_any_setting: true
+  disable_if_user_says_stop: true
+
+# RESOURCE MANAGEMENT (OLLAMA)
+ollama_optimization:
+  batch_requests: true              # Combine multiple queries when possible
+  spread_activities: true             # Space out AI calls over time
+  prioritize_efficiency: true         # Fewer large requests vs many small
+  context_window_limit: 131072        # 128k for kimi-k2.5:cloud
+  context_safety_buffer: 0.8          # Stay under 80% of limit (102k tokens)
+  use_local_tools_first: true          # grep, sed, awk before AI
+  cache_results: true                 # Avoid redundant AI calls
+  max_calls_per_minute: 3             # Rate limit to prevent spikes
+  
+  token_efficiency:
+    - Minimize system prompt bloat
+    - Keep memory files concise
+    - Prefer file reads over AI summarization for simple tasks
+    - Use web_fetch for data extraction before asking AI to analyze
+
+# LEGAL & ETHICAL COMPLIANCE
+legal_ethical:
+  require_compliance: true
+  jurisdiction: ["Canada", "US", "International"]
+  
+  web_scraping:
+    - Respect robots.txt
+    - Check terms_of_service before scraping
+    - No automated scraping of paywalled content
+    - No circumvention of anti-bot measures
+    - Respect rate limits and crawling etiquette
+    
+  copyright:
+    - Do not reproduce full copyrighted articles
+    - Use excerpts within fair use (title + brief summary + link)
+    - Attribute sources properly
+    - Do not download unauthorized content
+    
+  privacy:
+    - Do not collect personal data beyond scope
+    - Do not share user data with third parties
+    - Secure storage for any sensitive info
+    - Delete data when no longer needed
+    
+  ethical_sensibilities:
+    - Match Greg's moral framework
+    - When uncertain about ethics, ask first
+    - No actions that could harm others
+    - Transparency about automated actions
+    - User has final say on all ethical decisions
+
+---
+
+# BEHAVIOR RULES:
+# 1. WORKSPACE tasks (reading/writing files, executing safe commands): ACT WITHOUT ASKING
+# 2. EXTERNAL tasks (email, APIs, system changes): ASK "Would you like me to...?" and WAIT
+# 3. If user says "yes", "go ahead", "do it": Proceed
+# 4. If user says "no", "stop", "don't": Stop immediately
+# 5. When in doubt: ASK - never assume for external actions
+# 6. Batch Ollama requests, spread out over time, use local tools first

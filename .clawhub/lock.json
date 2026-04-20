@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "skills": {
+    "himalaya": {
+      "version": "1.0.0",
+      "installedAt": 1775321747590
+    },
+    "browser-automation": {
+      "version": "1.0.1",
+      "installedAt": 1775468783070
+    },
+    "proactive-agent": {
+      "version": "3.1.0",
+      "installedAt": 1775504923685
+    },
+    "notion": {
+      "version": "1.0.0",
+      "installedAt": 1776722302095
+    },
+    "github": {
+      "version": "1.0.0",
+      "installedAt": 1776722346511
+    }
+  }
+}

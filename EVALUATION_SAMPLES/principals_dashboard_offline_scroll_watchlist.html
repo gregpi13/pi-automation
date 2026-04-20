@@ -1,0 +1,1023 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ross Drive Principal's Dashboard (offline)</title>
+<style>
+  :root{
+    --bg:#071325;
+    --bg2:#0a1a33;
+    --panel:#0c1d38;
+    --panel2:#102544;
+    --line:rgba(255,255,255,.10);
+    --text:#e8eefc;
+    --muted:#aab6d3;
+    --accent:#67d5ff;
+    --accent2:#62e4b2;
+    --warn:#f7c544;
+    --danger:#ff6b86;
+    --soft:#1b3155;
+    --shadow:0 18px 50px rgba(0,0,0,.35);
+    --radius:22px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family: Inter, Segoe UI, Arial, sans-serif;
+    color:var(--text);
+    background:
+      radial-gradient(circle at top left, rgba(114,220,255,.12), transparent 22%),
+      radial-gradient(circle at top right, rgba(130,104,255,.10), transparent 20%),
+      linear-gradient(180deg, #071121 0%, #08162b 38%, #071325 100%);
+  }
+  .shell{max-width: 1440px; margin: 0 auto; padding: 22px;}
+  .hero{
+    display:flex; gap:18px; align-items:center; padding:18px 6px 8px;
+  }
+  .logo{
+    width:60px; height:60px; border-radius:18px;
+    background: linear-gradient(135deg, #59d8ff, #a886ff 50%, #66efb8);
+    box-shadow: inset 0 0 20px rgba(255,255,255,.18), 0 8px 25px rgba(72,166,255,.25);
+  }
+  h1{margin:0; font-size:28px; font-weight:800; letter-spacing:-.03em}
+  .subtitle{color:var(--muted); font-size:15px; margin-top:5px}
+  .toolbar{
+    display:flex; flex-wrap:wrap; gap:12px; align-items:center;
+    padding: 10px 0 20px;
+  }
+  .btn, .pill, select, input[type="search"]{
+    border:1px solid rgba(255,255,255,.12);
+    background: rgba(255,255,255,.04);
+    color:var(--text);
+    border-radius:18px;
+    min-height:46px;
+  }
+  .btn{
+    padding: 0 20px; cursor:pointer; font-size:15px; font-weight:600;
+    box-shadow: var(--shadow);
+  }
+  .btn:hover{filter:brightness(1.07)}
+  .btn.primary{
+    background: linear-gradient(180deg, rgba(105,214,255,.18), rgba(124,146,255,.15));
+    border-color: rgba(127,216,255,.35);
+  }
+  .fileName{color:var(--muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size:14px}
+  .spacer{flex:1}
+  .toggle{
+    display:flex; overflow:hidden; border:1px solid rgba(255,255,255,.12); border-radius:18px;
+    background: rgba(255,255,255,.04);
+  }
+  .toggle button{
+    border:0; background:transparent; color:var(--muted); padding:12px 18px; cursor:pointer; font-weight:700;
+  }
+  .toggle button.active{
+    background: rgba(104, 214, 255, .18); color:var(--text);
+  }
+  .grid{
+    display:grid; grid-template-columns: 1fr; gap:18px;
+  }
+  .panel{
+    background: linear-gradient(180deg, rgba(16,35,66,.95), rgba(8,26,54,.96));
+    border:1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow);
+    overflow:hidden;
+  }
+  .panelHead{
+    display:flex; gap:14px; align-items:flex-start; justify-content:space-between;
+    padding:22px 24px 18px; border-bottom:1px solid var(--line);
+  }
+  .panelHead h2{margin:0; font-size:20px; letter-spacing:-.02em}
+  .panelHead p{margin:6px 0 0; color:var(--muted)}
+  .panelBody{padding:20px 24px 24px}
+  .cards{
+    display:grid; grid-template-columns: repeat(6, minmax(0,1fr)); gap:16px; margin-bottom:18px;
+  }
+  .card{
+    border:1px solid var(--line);
+    border-radius:24px; padding:18px;
+    background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.03));
+    min-height:122px;
+  }
+  .card .label{color:var(--muted); font-size:14px}
+  .card .big{font-size:32px; font-weight:900; margin-top:8px}
+  .card .small{color:var(--muted); margin-top:4px}
+  .twoCol{display:grid; grid-template-columns: 1fr 1fr; gap:24px}
+  .chartWrap{border-top:1px solid var(--line); padding-top:18px}
+  .chartTitle{font-size:18px; margin-bottom:14px}
+  .barChart{
+    height:260px; display:flex; align-items:flex-end; gap:24px; padding:10px 8px 44px; position:relative;
+    border-bottom:1px solid rgba(255,255,255,.12);
+  }
+  .barChart::before, .barChart::after{
+    content:""; position:absolute; left:0; right:0; border-top:1px solid rgba(255,255,255,.08);
+  }
+  .barChart::before{top:34%}
+  .barChart::after{top:67%}
+  .bar{
+    flex:1; position:relative; min-width:70px; display:flex; justify-content:center;
+  }
+  .bar .fill{
+    width:100%; max-width:110px; border-radius:18px 18px 0 0;
+    background: linear-gradient(180deg, rgba(109,223,255,.84), rgba(125,120,255,.42));
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.08);
+  }
+  .bar .n{
+    position:absolute; top:-34px; font-weight:800; color:#dff7ff; font-size:18px;
+  }
+  .bar .x{
+    position:absolute; bottom:-38px; color:var(--muted); text-align:center; width:100%;
+    font-size:14px; line-height:1.2;
+  }
+  .legend{display:flex; flex-wrap:wrap; gap:14px; margin-top:14px; color:var(--muted)}
+  .dot{display:inline-block; width:14px; height:14px; border-radius:50%; margin-right:8px; vertical-align:-2px}
+  .stackWrap{display:flex; align-items:flex-end; gap:44px; height:260px; padding:10px 18px 44px; border-bottom:1px solid rgba(255,255,255,.12)}
+  .stackCol{flex:1; display:flex; flex-direction:column; justify-content:flex-end; gap:6px; align-items:center; position:relative}
+  .stack{
+    width:100%; max-width:190px; display:flex; flex-direction:column-reverse; gap:6px; min-height:180px;
+  }
+  .seg{
+    width:100%; border-radius:14px;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.06);
+  }
+  .stackLabel{
+    position:absolute; bottom:-38px; color:var(--text); font-size:16px; font-weight:700;
+  }
+
+  .filters{
+    display:grid; grid-template-columns: 1.1fr .85fr .85fr .85fr; gap:12px; margin-bottom:16px;
+  }
+  select, input[type="search"]{
+    width:100%; padding:0 14px; font-size:15px;
+  }
+  table{width:100%; border-collapse:collapse}
+  th, td{padding:14px 14px; border-top:1px solid var(--line); vertical-align:top}
+  thead th{color:#cbd7f5; text-align:left; font-size:14px; font-weight:800}
+  tbody tr:hover{background:rgba(255,255,255,.02)}
+  .studentCell{font-weight:800; font-size:15px}
+  .studentCell .meta{display:block; color:var(--muted); font-weight:500; margin-top:4px}
+  .tag{
+    display:inline-flex; align-items:center; gap:6px; border-radius:999px; padding:8px 12px; margin:4px 6px 4px 0;
+    font-weight:700; border:1px solid transparent; white-space:nowrap;
+  }
+  .t-danger{color:#ff8ca1; border-color:rgba(255,122,146,.45); background:rgba(255,107,134,.08)}
+  .t-warn{color:#ffd15e; border-color:rgba(247,197,68,.45); background:rgba(247,197,68,.08)}
+  .t-ok{color:#7fe9be; border-color:rgba(98,228,178,.4); background:rgba(98,228,178,.08)}
+  .sectionNote{color:var(--muted); margin-top:8px}
+.watchlistScroll{
+    max-height: 760px;
+    overflow-y: auto;
+    border:1px solid var(--line);
+    border-radius:18px;
+  }
+  .watchlistScroll table{margin:0}
+  .watchlistScroll thead th{
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: linear-gradient(180deg, rgba(12,29,56,.98), rgba(12,29,56,.98));
+  }
+  .interventions{
+    display:grid; grid-template-columns: 1.1fr 1fr; gap:18px;
+  }
+  .miniCards{
+    display:grid; grid-template-columns: repeat(3, 1fr); gap:14px;
+  }
+  .mini{
+    background:rgba(255,255,255,.03); border:1px solid var(--line); border-radius:18px; padding:16px;
+  }
+  .mini .n{font-size:28px; font-weight:900}
+  .mini .k{color:var(--muted); margin-top:4px}
+  .listBox{
+    border:1px solid var(--line); border-radius:18px; padding:16px; background:rgba(255,255,255,.03)
+  }
+  .listBox h3{margin:0 0 12px; font-size:16px}
+  .listBox ul{margin:0; padding-left:18px; color:var(--muted)}
+  .discGrid{
+    display:grid; grid-template-columns: 1fr 1fr; gap:18px;
+  }
+  .hBars{
+    display:flex; flex-direction:column; gap:8px; margin-top:8px;
+  }
+  .hRow{
+    display:grid; grid-template-columns: 150px 1fr 48px; gap:12px; align-items:center;
+  }
+  .hName{color:#dfe9ff}
+  .track{height:14px; border-radius:999px; background:rgba(255,255,255,.05); overflow:hidden; border:1px solid rgba(255,255,255,.06)}
+  .track > div{height:100%; border-radius:999px; background:linear-gradient(90deg, rgba(255,145,174,.7), rgba(98,228,178,.7))}
+  .smallTable td, .smallTable th{padding:10px 12px}
+  .footerNote{color:var(--muted); margin-top:16px}
+  .privacy{padding:18px 24px 24px; color:var(--muted); border-top:1px solid var(--line)}
+  .hidden{display:none !important}
+  .muted{color:var(--muted)}
+  .right{display:flex; gap:10px; align-items:center}
+  .nowrap{white-space:nowrap}
+
+  @media (max-width: 1200px){
+    .cards{grid-template-columns: repeat(3, minmax(0,1fr));}
+    .filters{grid-template-columns: repeat(2,1fr);}
+    .twoCol, .interventions, .discGrid{grid-template-columns:1fr}
+  }
+  @media (max-width: 760px){
+    .cards{grid-template-columns: repeat(2, minmax(0,1fr));}
+    .filters{grid-template-columns:1fr}
+    .shell{padding:12px}
+    .panelHead, .panelBody{padding-left:14px; padding-right:14px}
+    .hero{padding-top:6px}
+    .toolbar{gap:8px}
+    .btn{width:100%}
+    .spacer{display:none}
+  }
+
+  @media print{
+    body{background:#fff; color:#111}
+    .shell{max-width:none; padding:0}
+    .hero,.toolbar,.filters,.privacy,.noPrint,.panelHead .right button:not(.printKeep){display:none !important}
+    .panel{border:1px solid #ccc; box-shadow:none; background:#fff; page-break-inside:avoid}
+    .panelHead, .panelBody, th, td{color:#111}
+    .tag{border:1px solid #aaa; color:#111; background:#fff}
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="hero">
+    <div class="logo"></div>
+    <div>
+      <h1>Ross Drive Principal's Dashboard (offline)</h1>
+      <div class="subtitle">Term-aware analysis • Grade 7/8 % → A–D/R conversion • Interventions + teacher mark distribution checks</div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <label class="btn primary" for="csvFile">Load CSV</label>
+    <input id="csvFile" type="file" accept=".csv" class="hidden">
+    <div id="fileName" class="fileName">No file loaded</div>
+    <button class="btn" id="exportWatchlistBtn">Export Watchlist CSV</button>
+    <button class="btn" id="exportInterventionsBtn">Export Interventions CSV</button>
+    <button class="btn" id="saveDashboardBtn">Save Dashboard PDF</button>
+    <div class="spacer"></div>
+    <div class="toggle">
+      <button id="term1Btn" class="active">Term 1</button>
+      <button id="term2Btn">Term 2</button>
+    </div>
+  </div>
+
+  <div class="grid">
+    <section class="panel">
+      <div class="panelHead">
+        <div>
+          <h2>School Snapshot</h2>
+          <p>Attendance + achievement. Term 2 and Growth are enabled automatically when Term 2 columns exist in the CSV.</p>
+        </div>
+      </div>
+      <div class="panelBody">
+        <div class="filters">
+          <input type="search" id="searchBox" placeholder="Search student name or ID">
+          <select id="gradeFilter"><option value="">All grades</option></select>
+          <select id="teacherFilter"><option value="">All teachers</option></select>
+          <select id="classFilter"><option value="">All classes</option></select>
+        </div>
+        <div class="cards">
+          <div class="card"><div class="label">Students (filtered)</div><div class="big" id="cardStudents">—</div><div class="small">Current selection</div></div>
+          <div class="card"><div class="label">Absence risk (10+)</div><div class="big" id="cardRisk">—</div><div class="small" id="cardRiskPct">—</div></div>
+          <div class="card"><div class="label">Chronic (≥20)</div><div class="big" id="cardChronic">—</div><div class="small" id="cardChronicPct">—</div></div>
+          <div class="card"><div class="label">Language ≥B (<span id="termLabelLang">T1</span>)</div><div class="big" id="cardLang">—</div><div class="small" id="cardLangSub">—</div></div>
+          <div class="card"><div class="label">Math ≥B (<span id="termLabelMath">T1</span>)</div><div class="big" id="cardMath">—</div><div class="small" id="cardMathSub">—</div></div>
+          <div class="card"><div class="label">Avg growth (T2−T1)</div><div class="big" id="cardGrowth">—</div><div class="small" id="cardGrowthSub">Term 2 not loaded</div></div>
+        </div>
+
+        <div class="twoCol chartWrap">
+          <div>
+            <div class="chartTitle">Attendance distribution (Total Days Absent)</div>
+            <div class="barChart" id="attendanceChart"></div>
+            <div class="legend">
+              <span><span class="dot" style="background:#61d8ff"></span>0–5</span>
+              <span><span class="dot" style="background:#67d0ef"></span>6–10</span>
+              <span><span class="dot" style="background:#7f76d5"></span>11–20</span>
+              <span><span class="dot" style="background:#d8ac38"></span>21+</span>
+            </div>
+          </div>
+          <div>
+            <div class="chartTitle">Achievement distribution (selected term)</div>
+            <div class="stackWrap" id="achievementChart"></div>
+            <div class="legend" id="achLegend"></div>
+          </div>
+        </div>
+      </div>
+      <div class="privacy">Privacy: runs locally in Edge; no internet; no data upload. Exports are created in your browser.</div>
+    </section>
+
+    <section class="panel">
+      <div class="panelHead">
+        <div>
+          <h2>Student Watchlist</h2>
+          <p>Auto-flags attendance risk/chronic and achievement below B. Growth flags appear only when Term 2 exists.</p>
+        </div>
+        <div class="right">
+          <button class="btn printKeep" id="saveWatchlistBtn">Save Watchlist PDF</button>
+          <div class="muted nowrap" id="watchlistCount">0 students</div>
+        </div>
+      </div>
+      <div class="panelBody">
+        <div class="watchlistScroll"><table>
+          <thead>
+            <tr>
+              <th>Student</th>
+              <th>Teacher / Class</th>
+              <th>Grade</th>
+              <th>Absences</th>
+              <th>Language</th>
+              <th>Math</th>
+              <th>Flags</th>
+            </tr>
+          </thead>
+          <tbody id="watchlistBody"></tbody>
+        </table></div>
+        <div class="footerNote">Quick action: Export the watchlist for SST/IST tracking.</div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panelHead">
+        <div>
+          <h2>Interventions Overview</h2>
+          <p>Practical planning summary for student support, attendance follow-up, and moderation conversations.</p>
+        </div>
+      </div>
+      <div class="panelBody">
+        <div class="interventions">
+          <div>
+            <div class="miniCards">
+              <div class="mini"><div class="n" id="intAttendance">—</div><div class="k">Attendance follow-up</div></div>
+              <div class="mini"><div class="n" id="intAchievement">—</div><div class="k">Achievement support</div></div>
+              <div class="mini"><div class="n" id="intUrgent">—</div><div class="k">Priority / multiple flags</div></div>
+            </div>
+            <div class="listBox" style="margin-top:14px">
+              <h3>Suggested student groupings</h3>
+              <ul id="groupings"></ul>
+            </div>
+          </div>
+          <div>
+            <div class="listBox">
+              <h3>Most common needs in current selection</h3>
+              <ul id="commonNeeds"></ul>
+            </div>
+            <div class="listBox" style="margin-top:14px">
+              <h3>Leadership prompts</h3>
+              <ul id="leadershipPrompts">
+                <li>Triangulate watchlist flags with classroom evidence, conferring notes, and moderated tasks.</li>
+                <li>Use chronic absenteeism data to prioritize family outreach, attendance plans, and check-in adults.</li>
+                <li>Review teachers with very low mark spread alongside common assessments and shared success criteria.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panelHead">
+        <div>
+          <h2>Teacher Mark Distribution (Discernment Check)</h2>
+          <p>Find teachers with the lowest spread of marks. Score uses normalized entropy across A/B/C/D/R for the selected term. Lower = less varied.</p>
+        </div>
+        <div class="muted">Use as a conversation starter: triangulate with moderation and shared success criteria.</div>
+      </div>
+      <div class="panelBody">
+        <div class="discGrid">
+          <div class="listBox">
+            <h3>Language: lowest distribution (bottom 10)</h3>
+            <div class="hBars" id="langDiscBars"></div>
+            <div class="sectionNote" id="langDiscNote"></div>
+            <table class="smallTable">
+              <thead><tr><th>Teacher</th><th>n</th><th>Score</th><th>Counts (A/B/C/D/R)</th></tr></thead>
+              <tbody id="langDiscTable"></tbody>
+            </table>
+          </div>
+          <div class="listBox">
+            <h3>Math: lowest distribution (bottom 10)</h3>
+            <div class="hBars" id="mathDiscBars"></div>
+            <div class="sectionNote" id="mathDiscNote"></div>
+            <table class="smallTable">
+              <thead><tr><th>Teacher</th><th>n</th><th>Score</th><th>Counts (A/B/C/D/R)</th></tr></thead>
+              <tbody id="mathDiscTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+(() => {
+  const state = {
+    rawRows: [],
+    processedRows: [],
+    currentTerm: 1,
+    hasT2: false,
+    fileName: '',
+    lastWatchlist: [],
+    lastInterventions: []
+  };
+
+  const E = id => document.getElementById(id);
+  const TERM_LABEL = () => state.currentTerm === 1 ? 'T1' : 'T2';
+
+  const LETTER_ORDER = ['A','B','C','D','R','I','Missing'];
+  const LETTER_COLORS = {
+    'A':'#40d59d',
+    'B':'#67d5ff',
+    'C':'#f4c126',
+    'D':'#ff7b96',
+    'R':'#ff4f75',
+    'I':'#b8c2db',
+    'Missing':'#4f5d7e'
+  };
+
+  function normalizeHeader(h){
+    return String(h || '').trim().replace(/\s+/g, ' ').toLowerCase();
+  }
+
+  function parseCSV(text){
+    const rows = [];
+    let i = 0, field = '', row = [], inQuotes = false;
+    while(i < text.length){
+      const c = text[i];
+      if(inQuotes){
+        if(c === '"'){
+          if(text[i+1] === '"'){ field += '"'; i += 2; continue; }
+          inQuotes = false; i++; continue;
+        }
+        field += c; i++; continue;
+      } else {
+        if(c === '"'){ inQuotes = true; i++; continue; }
+        if(c === ','){ row.push(field); field = ''; i++; continue; }
+        if(c === '\n'){
+          row.push(field); rows.push(row);
+          field = ''; row = []; i++; continue;
+        }
+        if(c === '\r'){ i++; continue; }
+        field += c; i++; continue;
+      }
+    }
+    if(field.length || row.length){ row.push(field); rows.push(row); }
+    if(!rows.length) return [];
+    const headers = rows[0].map(h => String(h).trim());
+    return rows.slice(1)
+      .filter(r => r.some(v => String(v).trim() !== ''))
+      .map(r => Object.fromEntries(headers.map((h, idx) => [h, r[idx] ?? ''])));
+  }
+
+  function findColumn(obj, possibilities){
+    const keys = Object.keys(obj);
+    const map = new Map(keys.map(k => [normalizeHeader(k), k]));
+    for(const p of possibilities){
+      const direct = map.get(normalizeHeader(p));
+      if(direct) return direct;
+    }
+    for(const k of keys){
+      const nk = normalizeHeader(k);
+      if(possibilities.some(p => nk.includes(normalizeHeader(p)))) return k;
+    }
+    return null;
+  }
+
+  function toNumber(v){
+    if(v === null || v === undefined) return null;
+    const s = String(v).trim().replace(/[%,$]/g,'');
+    if(!s) return null;
+    const n = Number(s);
+    return Number.isFinite(n) ? n : null;
+  }
+
+  function scoreToLetter(raw, grade){
+    if(raw === null || raw === undefined || String(raw).trim() === '') return null;
+    const s = String(raw).trim().toUpperCase();
+
+    if(['A','A+','A-','B','B+','B-','C','C+','C-','D','D+','D-','R','I'].includes(s)){
+      if(s.startsWith('A')) return 'A';
+      if(s.startsWith('B')) return 'B';
+      if(s.startsWith('C')) return 'C';
+      if(s.startsWith('D')) return 'D';
+      if(s === 'R') return 'R';
+      if(s === 'I') return 'I';
+    }
+
+    const n = toNumber(s);
+    if(n === null) return null;
+
+    // For Grade 7/8 or any numeric value, convert to letter band.
+    if(n < 50) return 'R';
+    if(n < 60) return 'D';
+    if(n < 70) return 'C';
+    if(n < 80) return 'B';
+    return 'A';
+  }
+
+  function letterValue(letter){
+    switch(letter){
+      case 'A': return 4;
+      case 'B': return 3;
+      case 'C': return 2;
+      case 'D': return 1;
+      case 'R': return 0;
+      default: return null;
+    }
+  }
+
+  function safeText(v){ return v == null ? '' : String(v); }
+
+  function pct(n, d){
+    if(!d) return '0%';
+    return Math.round((n/d)*100) + '%';
+  }
+
+  function gradeCompare(a, b){
+    const na = Number(a), nb = Number(b);
+    if(Number.isFinite(na) && Number.isFinite(nb)) return na - nb;
+    return String(a).localeCompare(String(b));
+  }
+
+  function getRequiredColumns(row){
+    return {
+      teacher: findColumn(row, ['Teacher']),
+      classCode: findColumn(row, ['Class Code', 'Class']),
+      grade: findColumn(row, ['Grade']),
+      studentName: findColumn(row, ['Student Name', 'Student']),
+      studentId: findColumn(row, ['Student ID', 'ID']),
+      absences: findColumn(row, ['Total Days Absent', 'Days Absent', 'Absences']),
+      langT1: findColumn(row, ['Language T1 (Actual)', 'Language T1', 'Language Term 1', 'Language Actual T1']),
+      mathT1: findColumn(row, ['Math T1 (Actual)', 'Math T1', 'Math Term 1', 'Math Actual T1']),
+      langT2: findColumn(row, ['Language T2 (Actual)', 'Language T2', 'Language Term 2', 'Language Actual T2']),
+      mathT2: findColumn(row, ['Math T2 (Actual)', 'Math T2', 'Math Term 2', 'Math Actual T2']),
+    };
+  }
+
+  function processRows(rawRows){
+    if(!rawRows.length) return [];
+    const cols = getRequiredColumns(rawRows[0]);
+    const mustHave = ['teacher','classCode','grade','studentName','studentId','absences','langT1','mathT1'];
+    const missing = mustHave.filter(k => !cols[k]);
+    if(missing.length){
+      alert('Missing expected CSV columns: ' + missing.join(', ') + '\\n\\nPlease include columns such as Teacher, Class Code, Grade, Student Name, Student ID, Total Days Absent, Language T1 (Actual), and Math T1 (Actual).');
+      return [];
+    }
+    state.hasT2 = !!(cols.langT2 && cols.mathT2);
+
+    return rawRows.map(r => {
+      const grade = safeText(r[cols.grade]).trim();
+      const absences = toNumber(r[cols.absences]) ?? 0;
+      const langT1 = scoreToLetter(r[cols.langT1], grade);
+      const mathT1 = scoreToLetter(r[cols.mathT1], grade);
+      const langT2 = cols.langT2 ? scoreToLetter(r[cols.langT2], grade) : null;
+      const mathT2 = cols.mathT2 ? scoreToLetter(r[cols.mathT2], grade) : null;
+
+      return {
+        teacher: safeText(r[cols.teacher]).trim(),
+        classCode: safeText(r[cols.classCode]).trim(),
+        grade: grade,
+        studentName: safeText(r[cols.studentName]).trim(),
+        studentId: safeText(r[cols.studentId]).trim(),
+        absences,
+        langT1, mathT1, langT2, mathT2,
+        langRawT1: safeText(r[cols.langT1]).trim(),
+        mathRawT1: safeText(r[cols.mathT1]).trim(),
+        langRawT2: cols.langT2 ? safeText(r[cols.langT2]).trim() : '',
+        mathRawT2: cols.mathT2 ? safeText(r[cols.mathT2]).trim() : '',
+        _source: r
+      };
+    });
+  }
+
+  function populateFilters(rows){
+    const setOptions = (el, values, label) => {
+      const current = el.value;
+      el.innerHTML = `<option value="">All ${label}</option>` + values.map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join('');
+      if(values.includes(current)) el.value = current;
+    };
+    setOptions(E('gradeFilter'), [...new Set(rows.map(r => r.grade))].sort(gradeCompare), 'grades');
+    setOptions(E('teacherFilter'), [...new Set(rows.map(r => r.teacher))].sort(), 'teachers');
+    setOptions(E('classFilter'), [...new Set(rows.map(r => r.classCode))].sort(), 'classes');
+  }
+
+  function escapeHtml(s){
+    return String(s)
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;');
+  }
+
+  function filteredRows(){
+    const q = E('searchBox').value.trim().toLowerCase();
+    const g = E('gradeFilter').value;
+    const t = E('teacherFilter').value;
+    const c = E('classFilter').value;
+
+    return state.processedRows.filter(r => {
+      if(g && r.grade !== g) return false;
+      if(t && r.teacher !== t) return false;
+      if(c && r.classCode !== c) return false;
+      if(q){
+        const hay = `${r.studentName} ${r.studentId}`.toLowerCase();
+        if(!hay.includes(q)) return false;
+      }
+      return true;
+    });
+  }
+
+  function currentLetter(row, subject){
+    return state.currentTerm === 1 ? row[subject + 'T1'] : (row[subject + 'T2'] || null);
+  }
+
+  function currentRaw(row, subject){
+    return state.currentTerm === 1 ? row['langRawT1'] : row['langRawT2'];
+  }
+
+  function isAtOrAboveB(letter){
+    return letter === 'A' || letter === 'B';
+  }
+
+  function getSnapshot(rows){
+    const studentCount = rows.length;
+    const risk = rows.filter(r => r.absences >= 10).length;
+    const chronic = rows.filter(r => r.absences >= 20).length;
+
+    const langWith = rows.filter(r => currentLetter(r,'lang'));
+    const mathWith = rows.filter(r => currentLetter(r,'math'));
+    const langGood = langWith.filter(r => isAtOrAboveB(currentLetter(r,'lang'))).length;
+    const mathGood = mathWith.filter(r => isAtOrAboveB(currentLetter(r,'math'))).length;
+
+    let growthPairs = [];
+    if(state.hasT2){
+      for(const r of rows){
+        const l1 = letterValue(r.langT1), l2 = letterValue(r.langT2);
+        const m1 = letterValue(r.mathT1), m2 = letterValue(r.mathT2);
+        if(l1 !== null && l2 !== null) growthPairs.push(l2 - l1);
+        if(m1 !== null && m2 !== null) growthPairs.push(m2 - m1);
+      }
+    }
+    const avgGrowth = growthPairs.length ? (growthPairs.reduce((a,b)=>a+b,0) / growthPairs.length) : null;
+
+    return {studentCount, risk, chronic, langWith: langWith.length, mathWith: mathWith.length, langGood, mathGood, avgGrowth};
+  }
+
+  function renderSnapshot(rows){
+    const s = getSnapshot(rows);
+    E('cardStudents').textContent = s.studentCount;
+    E('cardRisk').textContent = s.risk;
+    E('cardRiskPct').textContent = pct(s.risk, s.studentCount);
+    E('cardChronic').textContent = s.chronic;
+    E('cardChronicPct').textContent = pct(s.chronic, s.studentCount);
+
+    E('termLabelLang').textContent = TERM_LABEL();
+    E('termLabelMath').textContent = TERM_LABEL();
+    E('cardLang').textContent = pct(s.langGood, s.langWith);
+    E('cardLangSub').textContent = `${s.langGood}/${s.langWith} with data`;
+    E('cardMath').textContent = pct(s.mathGood, s.mathWith);
+    E('cardMathSub').textContent = `${s.mathGood}/${s.mathWith} with data`;
+
+    if(state.hasT2){
+      E('cardGrowth').textContent = s.avgGrowth == null ? '—' : s.avgGrowth.toFixed(2);
+      E('cardGrowthSub').textContent = 'Average level change across Language + Math';
+    } else {
+      E('cardGrowth').textContent = '— / —';
+      E('cardGrowthSub').textContent = 'Term 2 not loaded';
+    }
+  }
+
+  function renderAttendance(rows){
+    const bins = [
+      {label:'0–5', min:0, max:5},
+      {label:'6–10', min:6, max:10},
+      {label:'11–20', min:11, max:20},
+      {label:'21+', min:21, max:Infinity},
+    ];
+    const counts = bins.map(b => rows.filter(r => r.absences >= b.min && r.absences <= b.max).length);
+    const max = Math.max(...counts, 1);
+    const colors = [
+      'linear-gradient(180deg, rgba(109,223,255,.84), rgba(125,120,255,.42))',
+      'linear-gradient(180deg, rgba(109,223,255,.84), rgba(99,145,255,.35))',
+      'linear-gradient(180deg, rgba(145,126,255,.72), rgba(87,83,180,.42))',
+      'linear-gradient(180deg, rgba(245,198,73,.85), rgba(179,138,35,.45))'
+    ];
+    E('attendanceChart').innerHTML = bins.map((b, i) => {
+      const h = Math.max(10, Math.round((counts[i] / max) * 190));
+      return `
+        <div class="bar">
+          <div class="n">${counts[i]}</div>
+          <div class="fill" style="height:${h}px; background:${colors[i]}"></div>
+          <div class="x">${b.label}<br><span class="muted">Days Absent</span></div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function renderAchievement(rows){
+    const subjects = ['Language', 'Math'];
+    const ids = ['lang','math'];
+    const maxTotal = Math.max(...ids.map(id => rows.filter(r => currentLetter(r, id)).length), 1);
+    E('achievementChart').innerHTML = ids.map((id, idx) => {
+      const counts = {};
+      LETTER_ORDER.forEach(k => counts[k] = 0);
+      for(const r of rows){
+        const letter = currentLetter(r, id) || 'Missing';
+        counts[letter] = (counts[letter] || 0) + 1;
+      }
+      const total = LETTER_ORDER.reduce((a,k)=>a+counts[k],0);
+      const segs = LETTER_ORDER.map(k => {
+        const h = total ? Math.max(8, Math.round((counts[k]/maxTotal) * 170)) : 8;
+        return `<div class="seg" title="${k}: ${counts[k]}" style="height:${h}px; background:${LETTER_COLORS[k]}"></div>`;
+      }).join('');
+      return `<div class="stackCol"><div class="stack">${segs}</div><div class="stackLabel">${subjects[idx]}</div></div>`;
+    }).join('');
+
+    E('achLegend').innerHTML = LETTER_ORDER.map(k =>
+      `<span><span class="dot" style="background:${LETTER_COLORS[k]}"></span>${k}</span>`
+    ).join('');
+  }
+
+  function buildWatchlist(rows){
+    const list = [];
+    for(const r of rows){
+      const flags = [];
+      if(r.absences >= 20) flags.push({type:'danger', text:`Chronic absences (${trimNum(r.absences)})`});
+      else if(r.absences >= 10) flags.push({type:'warn', text:`Absence risk (${trimNum(r.absences)})`});
+
+      const lang = currentLetter(r,'lang');
+      const math = currentLetter(r,'math');
+
+      if(!lang) flags.push({type:'warn', text:'Missing Language data'});
+      else if(!isAtOrAboveB(lang)) flags.push({type:'warn', text:`Language below B (${lang})`});
+
+      if(!math) flags.push({type:'warn', text:'Missing Math data'});
+      else if(!isAtOrAboveB(math)) flags.push({type:'warn', text:`Math below B (${math})`});
+
+      if(state.hasT2 && state.currentTerm === 2){
+        const l1 = letterValue(r.langT1), l2 = letterValue(r.langT2);
+        const m1 = letterValue(r.mathT1), m2 = letterValue(r.mathT2);
+        if(l1 !== null && l2 !== null && l2 < l1) flags.push({type:'warn', text:`Language down ${l1-l2} level`});
+        if(m1 !== null && m2 !== null && m2 < m1) flags.push({type:'warn', text:`Math down ${m1-m2} level`});
+      }
+
+      if(flags.length){
+        list.push({...r, flags});
+      }
+    }
+
+    list.sort((a,b) => {
+      const aw = a.flags.length + (a.absences >= 20 ? 2 : a.absences >= 10 ? 1 : 0);
+      const bw = b.flags.length + (b.absences >= 20 ? 2 : b.absences >= 10 ? 1 : 0);
+      if(bw !== aw) return bw - aw;
+      return b.absences - a.absences;
+    });
+
+    state.lastWatchlist = list;
+    return list;
+  }
+
+  function trimNum(n){
+    return Number.isInteger(n) ? String(n) : Number(n).toFixed(1).replace(/\.0$/,'');
+  }
+
+  function renderWatchlist(rows){
+    const watch = buildWatchlist(rows);
+    E('watchlistCount').textContent = `${watch.length} students (scroll to view more)`;
+    const shown = watch;
+    E('watchlistBody').innerHTML = shown.length ? shown.map(r => `
+      <tr>
+        <td class="studentCell">${escapeHtml(r.studentName)}<span class="meta">ID: ${escapeHtml(r.studentId)}</span></td>
+        <td>${escapeHtml(r.teacher)}<br><span class="muted">${escapeHtml(r.classCode)}</span></td>
+        <td>${escapeHtml(r.grade)}</td>
+        <td><span class="tag ${r.absences >= 20 ? 't-danger' : r.absences >= 10 ? 't-warn' : 't-ok'}">${trimNum(r.absences)} days</span></td>
+        <td>${escapeHtml(currentLetter(r,'lang') || '—')}</td>
+        <td>${escapeHtml(currentLetter(r,'math') || '—')}</td>
+        <td>${r.flags.map(f => `<span class="tag ${f.type === 'danger' ? 't-danger' : f.type === 'warn' ? 't-warn' : 't-ok'}">${escapeHtml(f.text)}</span>`).join('')}</td>
+      </tr>
+    `).join('') : `<tr><td colspan="7" class="muted">No watchlist flags in the current selection.</td></tr>`;
+  }
+
+  function renderInterventions(rows){
+    const watch = state.lastWatchlist.length ? state.lastWatchlist : buildWatchlist(rows);
+    const attendance = watch.filter(r => r.flags.some(f => /absences/i.test(f.text))).length;
+    const achievement = watch.filter(r => r.flags.some(f => /below B|Missing/i.test(f.text))).length;
+    const urgent = watch.filter(r => r.flags.length >= 3 || r.absences >= 20).length;
+
+    E('intAttendance').textContent = attendance;
+    E('intAchievement').textContent = achievement;
+    E('intUrgent').textContent = urgent;
+
+    const needsMap = new Map();
+    const groupings = [];
+
+    watch.forEach(r => {
+      r.flags.forEach(f => needsMap.set(f.text, (needsMap.get(f.text) || 0) + 1));
+    });
+
+    const topNeeds = [...needsMap.entries()].sort((a,b) => b[1]-a[1]).slice(0,6);
+    E('commonNeeds').innerHTML = topNeeds.length ? topNeeds.map(([k,v]) => `<li>${escapeHtml(k)} — ${v} student${v===1?'':'s'}</li>`).join('') : '<li>No flagged needs.</li>';
+
+    const chronicBelowB = watch.filter(r => r.absences >= 20 && (!isAtOrAboveB(currentLetter(r,'lang')) || !isAtOrAboveB(currentLetter(r,'math')))).length;
+    const attendanceOnly = watch.filter(r => r.absences >= 10 && r.flags.every(f => /absences/i.test(f.text))).length;
+    const achievementOnly = watch.filter(r => r.absences < 10 && r.flags.some(f => /below B|Missing/i.test(f.text))).length;
+    const multiFlag = watch.filter(r => r.flags.length >= 3).length;
+
+    if(chronicBelowB) groupings.push(`Chronic attendance + below B: ${chronicBelowB} students for coordinated attendance/achievement planning.`);
+    if(attendanceOnly) groupings.push(`Attendance-only watchlist: ${attendanceOnly} students who may benefit from monitoring, check-in adults, and family outreach.`);
+    if(achievementOnly) groupings.push(`Achievement-only support: ${achievementOnly} students for targeted instructional response or moderation review.`);
+    if(multiFlag) groupings.push(`Multiple flags: ${multiFlag} students to prioritize at SST/IST or grade team meetings.`);
+
+    E('groupings').innerHTML = groupings.length ? groupings.map(g => `<li>${escapeHtml(g)}</li>`).join('') : '<li>No intervention groupings for the current selection.</li>';
+
+    state.lastInterventions = watch.map(r => ({
+      Student: r.studentName,
+      StudentID: r.studentId,
+      Teacher: r.teacher,
+      ClassCode: r.classCode,
+      Grade: r.grade,
+      Absences: r.absences,
+      Language: currentLetter(r,'lang') || '',
+      Math: currentLetter(r,'math') || '',
+      Flags: r.flags.map(f => f.text).join(' | ')
+    }));
+  }
+
+  function entropyScore(counts){
+    const keys = ['A','B','C','D','R'];
+    const vals = keys.map(k => counts[k] || 0);
+    const total = vals.reduce((a,b)=>a+b,0);
+    if(total <= 1) return 0;
+    let h = 0;
+    for(const c of vals){
+      if(!c) continue;
+      const p = c / total;
+      h -= p * Math.log2(p);
+    }
+    return h / Math.log2(keys.length);
+  }
+
+  function teacherDistributions(rows, subject){
+    const byTeacher = new Map();
+    for(const r of rows){
+      const letter = currentLetter(r, subject);
+      if(!letter || !['A','B','C','D','R'].includes(letter)) continue;
+      if(!byTeacher.has(r.teacher)) byTeacher.set(r.teacher, {teacher:r.teacher, counts:{A:0,B:0,C:0,D:0,R:0}, n:0});
+      const obj = byTeacher.get(r.teacher);
+      obj.counts[letter] += 1;
+      obj.n += 1;
+    }
+    return [...byTeacher.values()].map(o => ({
+      ...o,
+      score: entropyScore(o.counts)
+    })).sort((a,b) => a.score - b.score || a.teacher.localeCompare(b.teacher));
+  }
+
+  function renderDisc(subject, barsId, tableId, noteId){
+    const rows = filteredRows();
+    const data = teacherDistributions(rows, subject);
+    const bottom = data.slice(0, 10);
+    E(noteId).textContent = `Teachers with ≥1 mark counted: ${data.length}. Showing lowest ${bottom.length}.`;
+
+    E(barsId).innerHTML = bottom.map(d => `
+      <div class="hRow">
+        <div class="hName">${escapeHtml(d.teacher)}</div>
+        <div class="track"><div style="width:${Math.max(1, d.score*100)}%"></div></div>
+        <div>${d.score.toFixed(2)}</div>
+      </div>
+    `).join('');
+
+    E(tableId).innerHTML = bottom.map(d => `
+      <tr>
+        <td>${escapeHtml(d.teacher)}</td>
+        <td>${d.n}</td>
+        <td>${d.score.toFixed(2)}</td>
+        <td>${d.counts.A}/${d.counts.B}/${d.counts.C}/${d.counts.D}/${d.counts.R}</td>
+      </tr>
+    `).join('');
+  }
+
+  function rerender(){
+    const rows = filteredRows();
+    renderSnapshot(rows);
+    renderAttendance(rows);
+    renderAchievement(rows);
+    renderWatchlist(rows);
+    renderInterventions(rows);
+    renderDisc('lang', 'langDiscBars', 'langDiscTable', 'langDiscNote');
+    renderDisc('math', 'mathDiscBars', 'mathDiscTable', 'mathDiscNote');
+    E('term1Btn').classList.toggle('active', state.currentTerm === 1);
+    E('term2Btn').classList.toggle('active', state.currentTerm === 2);
+    E('term2Btn').disabled = !state.hasT2;
+    E('term2Btn').style.opacity = state.hasT2 ? '1' : '.45';
+  }
+
+  function objectsToCSV(objs){
+    if(!objs.length) return 'No data\\n';
+    const headers = Object.keys(objs[0]);
+    const esc = v => {
+      const s = v == null ? '' : String(v);
+      return /[",\n]/.test(s) ? '"' + s.replaceAll('"','""') + '"' : s;
+    };
+    const lines = [headers.join(',')];
+    for(const obj of objs){
+      lines.push(headers.map(h => esc(obj[h])).join(','));
+    }
+    return lines.join('\\n');
+  }
+
+  function downloadText(filename, text, mime='text/csv'){
+    const blob = new Blob([text], {type:mime + ';charset=utf-8;'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+  }
+
+  function printSection(title, html){
+    const w = window.open('', '_blank');
+    w.document.write(`
+      <html>
+      <head>
+        <title>${escapeHtml(title)}</title>
+        <style>
+          body{font-family:Segoe UI,Arial,sans-serif;margin:24px;color:#111}
+          h1{margin:0 0 8px;font-size:22px}
+          p{margin:0 0 18px;color:#444}
+          table{width:100%;border-collapse:collapse;font-size:12px}
+          th,td{border:1px solid #ccc;padding:8px;vertical-align:top;text-align:left}
+          .tag{display:inline-block;border:1px solid #888;border-radius:999px;padding:3px 8px;margin:2px 4px 2px 0;font-size:11px}
+        </style>
+      </head>
+      <body>
+        <h1>${escapeHtml(title)}</h1>
+        <p>Generated locally from the Principal's Dashboard.</p>
+        ${html}
+        <script>window.onload=()=>window.print();<\/script>
+      </body>
+      </html>
+    `);
+    w.document.close();
+  }
+
+  E('csvFile').addEventListener('change', async (ev) => {
+    const file = ev.target.files[0];
+    if(!file) return;
+    E('fileName').textContent = file.name;
+    state.fileName = file.name;
+    const text = await file.text();
+    const raw = parseCSV(text);
+    state.rawRows = raw;
+    state.processedRows = processRows(raw);
+    if(!state.processedRows.length) return;
+    populateFilters(state.processedRows);
+    state.currentTerm = 1;
+    rerender();
+  });
+
+  ['searchBox','gradeFilter','teacherFilter','classFilter'].forEach(id => {
+    E(id).addEventListener('input', rerender);
+    E(id).addEventListener('change', rerender);
+  });
+
+  E('term1Btn').addEventListener('click', () => { state.currentTerm = 1; rerender(); });
+  E('term2Btn').addEventListener('click', () => { if(state.hasT2){ state.currentTerm = 2; rerender(); } });
+
+  E('exportWatchlistBtn').addEventListener('click', () => {
+    const watch = state.lastWatchlist.map(r => ({
+      Student: r.studentName,
+      StudentID: r.studentId,
+      Teacher: r.teacher,
+      ClassCode: r.classCode,
+      Grade: r.grade,
+      Absences: r.absences,
+      Language: currentLetter(r,'lang') || '',
+      Math: currentLetter(r,'math') || '',
+      Flags: r.flags.map(f => f.text).join(' | ')
+    }));
+    downloadText((state.fileName || 'dashboard') .replace(/\.csv$/i,'') + `_watchlist_${TERM_LABEL().toLowerCase()}.csv`, objectsToCSV(watch));
+  });
+
+  E('exportInterventionsBtn').addEventListener('click', () => {
+    downloadText((state.fileName || 'dashboard') .replace(/\.csv$/i,'') + `_interventions_${TERM_LABEL().toLowerCase()}.csv`, objectsToCSV(state.lastInterventions));
+  });
+
+  E('saveWatchlistBtn').addEventListener('click', () => {
+    const tableHtml = `
+      <table>
+        <thead><tr><th>Student</th><th>Teacher / Class</th><th>Grade</th><th>Absences</th><th>Language</th><th>Math</th><th>Flags</th></tr></thead>
+        <tbody>${E('watchlistBody').innerHTML}</tbody>
+      </table>`;
+    printSection(`Student Watchlist (${TERM_LABEL()})`, tableHtml);
+  });
+
+  E('saveDashboardBtn').addEventListener('click', () => window.print());
+
+  // Seed helper message only
+  E('watchlistBody').innerHTML = `<tr><td colspan="7" class="muted">Load a CSV to begin. Expected columns include Teacher, Class Code, Grade, Student Name, Student ID, Total Days Absent, Language T1 (Actual), and Math T1 (Actual). Optional: Language T2 (Actual), Math T2 (Actual).</td></tr>`;
+})();
+</script>
+</body>
+</html>

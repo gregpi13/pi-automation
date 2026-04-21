@@ -287,11 +287,20 @@ def validate_and_send():
     with open('/home/groot13-pi/.openclaw/logs/morning_draft.log', 'a') as f:
         f.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - Draft created - Weather: {weather_status}\n")
     
-    print(f"\n✅ Draft ready. Waiting for Sage verification...")
+    # Notify Sage via Telegram
+    print(f"\n📱 Notifying Sage via Telegram...")
+    try:
+        import subprocess
+        subprocess.run(['python3', '/home/groot13-pi/.openclaw/notify_sage_morning_briefing.py'], 
+                      timeout=30, capture_output=True)
+        print(f"✅ Sage notified")
+    except Exception as e:
+        print(f"⚠️ Notification failed (Sage will check manually): {e}")
+    
+    print(f"\n✅ Draft ready. Sage will verify and send by 6:00 AM.")
     print(f"   Weather: {weather_status}")
     print(f"   Events: {len(events)}")
     print(f"   News: {len(news)} articles")
-    print(f"\n   Sage: Check draft and run send_morning_briefing_verified()\n")
     
     return True
 
@@ -514,4 +523,10 @@ def check_morning_briefing_status():
     }
 
 if __name__ == "__main__":
-    validate_and_send()
+    import sys
+    if len(sys.argv) > 1 and sys.argv[1] == '--send-verified':
+        # Send the verified briefing
+        send_verified_briefing()
+    else:
+        # Create draft (default behavior)
+        validate_and_send()

@@ -208,7 +208,7 @@ def get_todays_events():
         return []
 
 def validate_and_send():
-    """Main validation and send function"""
+    """Main validation and send function - TWO STEP PROCESS"""
     print(f"\n{'='*50}")
     print(f"🌅 MORNING BRIEFING VALIDATION")
     print(f"{'='*50}\n")
@@ -237,28 +237,61 @@ def validate_and_send():
         has_url = "🔗" if article.get('url') else "❌"
         print(f"   {has_url} {article['source']}: {article['title'][:50]}...")
     
-    # Final validation - ABORT if weather fails
+    # Final validation
     print(f"\n{'='*50}")
     print("VALIDATION SUMMARY:")
     print(f"{'='*50}")
     
+    # Check if weather is missing
     if not weather:
-        print("❌ Weather: FAILED (All sources)")
-        print("❌ ABORTING: Briefing will NOT be sent without weather data")
-        print(f"\nRetry suggestion: Check again in 30 minutes or run manually when API recovers\n")
-        # Log failure for monitoring
-        with open('/home/groot13-pi/.openclaw/logs/morning_email_failures.log', 'a') as f:
-            f.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - ABORTED: Weather API failure\n")
-        return False
+        print("❌ Weather: FAILED")
+        weather_status = "❌ MISSING"
+    else:
+        print(f"✅ Weather: {weather['temp']}°C")
+        weather_status = f"✅ {weather['temp']}°C"
     
-    print(f"✅ Weather: {weather['temp']}°C ({weather['location']})" + 
-          f"  |  Events: {len(events)} found" + 
-          f"  |  News: {len(news)} articles")
-    print(f"\n✅ All critical sections validated. Sending email...\n")
+    print(f"{'✅' if events else '✅'} Calendar: {len(events)} events")
+    print(f"{'✅' if len(news) >= 3 else '⚠️'} News: {len(news)} articles")
     
-    # Build and send
+    # TWO-STEP: Save draft and notify Sage instead of sending
+    print(f"\n{'='*50}")
+    print("TWO-STEP PROCESS: Draft saved, awaiting verification")
+    print(f"{'='*50}\n")
+    
+    # Save draft HTML
     html = build_html(weather, events, news)
-    send_email(html)
+    draft_file = f'/home/groot13-pi/.openclaw/morning_briefing_draft_{datetime.now().strftime(\"%Y%m%d\")}.html'
+    with open(draft_file, 'w') as f:
+        f.write(html)
+    print(f"💾 Draft saved to: {draft_file}")
+    
+    # Create verification file for Sage
+    verify_file = '/home/groot13-pi/.openclaw/morning_briefing_verify.json'
+    verify_data = {
+        'date': datetime.now().strftime('%Y-%m-%d'),
+        'time': datetime.now().strftime('%H:%M:%S'),
+        'draft_file': draft_file,
+        'weather': weather_status,
+        'weather_data': weather,
+        'events_count': len(events),
+        'news_count': len(news),
+        'status': 'PENDING_VERIFICATION',
+        'issues': [] if weather else ['Weather API failed - needs manual check']
+    }
+    with open(verify_file, 'w') as f:
+        json.dump(verify_data, f, indent=2)
+    print(f"📋 Verification file: {verify_file}")
+    
+    # Log for monitoring
+    with open('/home/groot13-pi/.openclaw/logs/morning_draft.log', 'a') as f:
+        f.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - Draft created - Weather: {weather_status}\n")
+    
+    print(f"\n✅ Draft ready. Waiting for Sage verification...")
+    print(f"   Weather: {weather_status}")
+    print(f"   Events: {len(events)}")
+    print(f"   News: {len(news)} articles")
+    print(f"\n   Sage: Check draft and run send_morning_briefing_verified()\n")
+    
     return True
 
 def build_html(weather, events, news):
@@ -403,6 +436,81 @@ def send_email(html_body):
         import traceback
         traceback.print_exc()
         return False
+
+def send_verified_briefing():
+    """Send the verified morning briefing (called by Sage after verification)"""
+    import os
+    
+    verify_file = '/home/groot13-pi/.openclaw/morning_briefing_verify.json'
+    
+    # Check if verification file exists
+    if not os.path.exists(verify_file):
+        print("❌ No verification file found. Run validate_and_send() first.")
+        return False
+    
+    # Load verification data
+    with open(verify_file, 'r') as f:
+        verify_data = json.load(f)
+    
+    # Check if already sent
+    if verify_data.get('status') == 'SENT':
+        print(f"⚠️ Briefing already sent at {verify_data.get('sent_time', 'unknown')}")
+        return False
+    
+    # Get the draft file
+    draft_file = verify_data.get('draft_file')
+    if not draft_file or not os.path.exists(draft_file):
+        print(f"❌ Draft file not found: {draft_file}")
+        return False
+    
+    # Read the HTML
+    with open(draft_file, 'r') as f:
+        html = f.read()
+    
+    # Send it
+    print(f"\n{'='*50}")
+    print(f"📧 SENDING VERIFIED MORNING BRIEFING")
+    print(f"{'='*50}\n")
+    print(f"Date: {verify_data['date']}")
+    print(f"Weather: {verify_data['weather']}")
+    print(f"Events: {verify_data['events_count']}")
+    print(f"News: {verify_data['news_count']} articles\n")
+    
+    send_email(html)
+    
+    # Mark as sent
+    verify_data['status'] = 'SENT'
+    verify_data['sent_time'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    with open(verify_file, 'w') as f:
+        json.dump(verify_data, f, indent=2)
+    
+    print(f"\n✅ Briefing sent and logged.")
+    return True
+
+def check_morning_briefing_status():
+    """Check if morning briefing is ready for verification"""
+    import os
+    
+    verify_file = '/home/groot13-pi/.openclaw/morning_briefing_verify.json'
+    
+    if not os.path.exists(verify_file):
+        return {"status": "NO_DRAFT", "message": "No briefing draft found"}
+    
+    with open(verify_file, 'r') as f:
+        data = json.load(f)
+    
+    if data.get('status') == 'SENT':
+        return {"status": "ALREADY_SENT", "sent_time": data.get('sent_time')}
+    
+    return {
+        "status": "PENDING",
+        "date": data.get('date'),
+        "weather": data.get('weather'),
+        "weather_data": data.get('weather_data'),
+        "events": data.get('events_count'),
+        "news": data.get('news_count'),
+        "issues": data.get('issues', [])
+    }
 
 if __name__ == "__main__":
     validate_and_send()

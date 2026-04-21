@@ -1,0 +1,31 @@
+# OpenClaw Automation Schedule
+
+# RSS News Collection (midnight - 4 AM)
+0 0-4 * * * cd /home/groot13-pi/.openclaw && python3 /home/groot13-pi/.openclaw/collect_rss_news.py
+
+# Morning Briefing - Step 1: Create Draft (5 AM)
+0 5 * * * /usr/bin/python3 /home/groot13-pi/.openclaw/send_morning_agentmail.py >> /home/groot13-pi/.openclaw/logs/morning_draft.log 2>&1
+
+# Morning Briefing - Step 2: Reminder if not sent (5:55 AM)
+55 5 * * * /usr/bin/python3 /home/groot13-pi/.openclaw/check_morning_briefing_sent.py >> /home/groot13-pi/.openclaw/logs/morning_reminders.log 2>&1
+
+# Daily Telegram Summary (5 AM)
+0 5 * * * /usr/bin/python3 /home/groot13-pi/.openclaw/send_daily_telegram_summary.py >> /home/groot13-pi/.openclaw/logs/telegram_summary.log 2>&1
+
+# AgentMail Inbox Check (hourly)
+0 * * * * /usr/bin/python3 /home/groot13-pi/.openclaw/check_agentmail_inbox.py >> /home/groot13-pi/.openclaw/logs/agentmail_check.log 2>&1
+
+# Heartbeat Check (9 PM)
+0 21 * * * /usr/bin/python3 /home/groot13-pi/.openclaw/heartbeat.py >> /home/groot13-pi/.openclaw/logs/heartbeat.log 2>&1
+
+# Weight Loss Tracker Reminder (6:30 AM)
+30 6 * * * /usr/bin/python3 /home/groot13-pi/.openclaw/workspace/PROJECTS/weight_loss_tracker/send_daily_reminder.py
+
+# 6 PM Evening Briefing
+0 18 * * * /usr/bin/python3 /home/groot13-pi/.openclaw/send_6pm_briefing.py >> /home/groot13-pi/.openclaw/logs/6pm_briefing.log 2>&1
+
+# Daily Reflection (4 AM)
+0 4 * * * /usr/bin/python3 /home/groot13-pi/.openclaw/reflect_and_improve.py >> /home/groot13-pi/.openclaw/logs/reflection_cron.log 2>&1
+
+# Tokyo Trip Briefing - 8 AM daily during trip (Apr 20-24)
+0 8 * * * cd /home/groot13-pi/.openclaw && python3 trip_briefing.py >> /home/groot13-pi/.openclaw/logs/trip_briefing.log 2>&1

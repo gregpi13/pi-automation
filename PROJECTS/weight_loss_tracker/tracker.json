@@ -1,8 +1,8 @@
 {
   "startDate": "2026-04-07",
-  "endDate": "2026-04-20",
+  "endDate": "2026-04-21",
   "targetWeightLossLbs": 10,
-  "currentWeightLbs": 194.2,
+  "currentWeightLbs": 195,
   "targetWeightLbs": 186,
   "entries": [
     {
@@ -124,7 +124,15 @@
       "workout_type": "cardio + pushups (rest from weights)",
       "duration_minutes": 35,
       "notes": "Day 14 (FINAL DAY): 31 pushups, 30 min bike, rest day from weights. 14-day challenge COMPLETE!"
+    },
+    {
+      "date": "2026-04-21",
+      "weight": 195,
+      "workout_completed": true,
+      "workout_type": "strength + cardio",
+      "duration_minutes": 50,
+      "notes": "Day 15 (post-challenge): 195 lbs, 20 min bike, 2x15 all weight exercises. Challenge complete, maintaining routine!"
     }
   ],
-  "status": "active"
+  "status": "maintenance"
 }

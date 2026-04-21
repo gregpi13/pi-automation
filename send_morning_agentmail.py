@@ -214,6 +214,21 @@ def validate_and_send():
     print(f"{'='*50}\n")
     print(f"Started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
     
+    # CHECK: Was briefing already sent today?
+    today = datetime.now().strftime('%Y-%m-%d')
+    verify_file = '/home/groot13-pi/.openclaw/morning_briefing_verify.json'
+    if os.path.exists(verify_file):
+        try:
+            with open(verify_file, 'r') as f:
+                existing = json.load(f)
+            if existing.get('date') == today and existing.get('status') == 'SENT':
+                sent_time = existing.get('sent_time', 'unknown')
+                print(f"ℹ️ Morning briefing for {today} was already sent at {sent_time}")
+                print(f"   Skipping duplicate.")
+                return True
+        except:
+            pass  # Continue if file is corrupted
+    
     # Step 1: Get Weather (with fallbacks)
     print("Step 1: Collecting weather data...")
     weather = get_weather_with_fallback()

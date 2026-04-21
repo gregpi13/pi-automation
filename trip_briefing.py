@@ -206,14 +206,28 @@ def send_trip_briefing():
     from agentmail import AgentMail
     import json
     
+    # Get today's date
+    today = datetime.datetime.now().strftime('%Y-%m-%d')
+    
+    # CHECK: Was briefing already sent today?
+    verify_file = '/home/groot13-pi/.openclaw/trip_briefing_verify.json'
+    if os.path.exists(verify_file):
+        try:
+            with open(verify_file, 'r') as f:
+                existing = json.load(f)
+            if existing.get('date') == today and existing.get('status') == 'SENT':
+                sent_time = existing.get('sent_time', 'unknown')
+                print(f"ℹ️ Trip briefing for {today} was already sent at {sent_time}")
+                print(f"   Skipping duplicate. Run with --force to override.")
+                return True
+        except:
+            pass  # Continue if file is corrupted
+    
     # Load itinerary
     itinerary = load_itinerary()
     if not itinerary:
         print("❌ No itinerary data found")
         return False
-    
-    # Get today's date
-    today = datetime.datetime.now().strftime('%Y-%m-%d')
     
     # Check if today is in itinerary
     if today not in itinerary:

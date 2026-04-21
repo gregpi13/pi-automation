@@ -260,7 +260,8 @@ def validate_and_send():
     
     # Save draft HTML
     html = build_html(weather, events, news)
-    draft_file = f'/home/groot13-pi/.openclaw/morning_briefing_draft_{datetime.now().strftime(\"%Y%m%d\")}.html'
+    today_str = datetime.now().strftime('%Y%m%d')
+    draft_file = f'/home/groot13-pi/.openclaw/morning_briefing_draft_{today_str}.html'
     with open(draft_file, 'w') as f:
         f.write(html)
     print(f"💾 Draft saved to: {draft_file}")

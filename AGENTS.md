@@ -175,6 +175,71 @@ When receiving workout data from user:
 ### [Topic]
 [What you learned and how to do it better]
 
+### Post-Upgrade Verification Protocol (April 22, 2026)
+**Trigger:** After ANY OpenClaw update, AI model switch, or system restart
+**Action:** Proactively verify all automated jobs WITHOUT waiting for user complaint
+
+**Checklist:**
+1. **Morning Briefing** - Run `send_morning_agentmail.py`, verify:
+   - Weather data loads
+   - Calendar events parse
+   - News articles fetch
+   - Draft creates successfully
+   - No missing imports or errors
+
+2. **Trip Briefings** - Run `trip_briefing.py`, verify:
+   - Itinerary CSV loads
+   - Weather API responds
+   - HTML generates
+   - Emails send correctly
+
+3. **Workout Reminders** - Verify cron jobs:
+   - Check `crontab -l` for missing entries
+   - Test `send_daily_reminder.py`
+   - Verify tracker.json is valid JSON
+
+4. **Calendar Sync** - Run `update_calendar.py`, verify:
+   - AgentMail inbox checks work
+   - .ics files parse
+   - events.json updates
+
+5. **Evening Briefing** - Test `send_6pm_briefing.py`
+
+6. **Health Checks** - Run `health_checks.py`
+
+**If ANY check fails:**
+- Fix immediately
+- Document the issue
+- Add to memory
+- Commit fixes to GitHub
+- Notify Greg of what broke and what was fixed
+
+**Why:** OpenClaw 2026.4.20 update broke morning briefing (missing `import os`). Caught by user at 6 AM, not by proactive check.
+
+### Morning Briefing Workflow (Confirmed April 22, 2026)
+**Schedule:**
+- **5:00 AM** - Cron creates draft (no send)
+- **5:55 AM** - Reminder sent to Sage if not verified
+- **~6:00 AM** - Sage verifies, fixes if needed, sends
+
+**Verification points:**
+- Weather API responding (not placeholder)
+- Calendar events loaded
+- News articles fetched (≥3)
+- No missing sections
+
+### Tokyo Trip Briefing Workflow (Confirmed April 22, 2026)
+**Schedule (Apr 20-24 only):**
+- **8:00 AM** - Cron creates draft (no send)
+- **~8:05 AM** - Sage notified via Telegram
+- **~8:10 AM** - Sage verifies and sends
+
+**Verification points:**
+- Tokyo weather available
+- Flight info correct
+- Hotel details accurate
+- Activities listed
+
 ---
 
 *Make this your own. Add conventions, rules, and patterns as you figure out what works.*

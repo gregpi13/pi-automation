@@ -138,5 +138,18 @@
     "end_time_formatted": "16:30",
     "is_today": false,
     "tzid": "America/Toronto"
+  },
+  {
+    "summary": "Book TeamLab Tickets (July trip)",
+    "start": "20260501T090000",
+    "end": "20260501T100000",
+    "location": "",
+    "description": "TeamLab Planets Tokyo tickets for July 2026 trip likely released today. Book immediately - weekends sell out fast! ~\u00a53,800 per adult. https://teamlabplanets.dmm.com/en",
+    "invite_received": "2026-04-22 17:26:00.000000+00:00",
+    "email_id": "sage-reminder-teamlab-may1",
+    "date_formatted": "2026-05-01",
+    "time_formatted": "09:00 AM",
+    "end_time_formatted": "10:00 AM",
+    "source": "sage-reminder"
   }
 ]

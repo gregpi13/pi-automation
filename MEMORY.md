@@ -88,3 +88,8 @@
 
 <!-- openclaw-memory-promotion:memory:memory/2026-04-14.md:333:333 -->
 - **Time:** 19:05 EDT [score=0.864 recalls=0 avg=0.620 source=memory/2026-04-14.md:333-333]
+
+## Promoted From Short-Term Memory (2026-04-21)
+
+<!-- openclaw-memory-promotion:memory:memory/2026-04-15.md:458:460 -->
+- - Candidate: Possible Lasting Truths: - Complements Gemini models (Google's proprietary line) ### Notes - Greg forwarded this for my information - Potentially relevant for Pi deployment given efficiency claims - Apache 2.0 license removes commercial restrictions --- ## Workout Tracking - Day - confidence: 0.62 - evidence: memory/2026-04-14.md:323-325 [score=0.869 recalls=0 avg=0.620 source=memory/2026-04-15.md:13-15]

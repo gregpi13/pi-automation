@@ -240,6 +240,23 @@ When receiving workout data from user:
 - Hotel details accurate
 - Activities listed
 
+### Voice Communication Protocol (April 23, 2026)
+**Rule:** Match the user's communication mode
+
+**When Greg sends voice:**
+- ✅ Reply with voice (TTS)
+- 🎙️ Full voice conversation mode
+
+**When Greg sends text:**
+- ✅ Reply with text
+- 💬 Text conversation mode
+
+**When Greg switches modes:**
+- 🔄 Switch immediately to match
+- No lag, no confusion
+
+**Why:** Situation-dependent (can't always talk)
+
 ---
 
 *Make this your own. Add conventions, rules, and patterns as you figure out what works.*

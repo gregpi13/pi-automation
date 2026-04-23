@@ -93,3 +93,12 @@
 
 <!-- openclaw-memory-promotion:memory:memory/2026-04-15.md:458:460 -->
 - - Candidate: Possible Lasting Truths: - Complements Gemini models (Google's proprietary line) ### Notes - Greg forwarded this for my information - Potentially relevant for Pi deployment given efficiency claims - Apache 2.0 license removes commercial restrictions --- ## Workout Tracking - Day - confidence: 0.62 - evidence: memory/2026-04-14.md:323-325 [score=0.869 recalls=0 avg=0.620 source=memory/2026-04-15.md:13-15]
+
+## Promoted From Short-Term Memory (2026-04-23)
+
+<!-- openclaw-memory-promotion:memory:memory/2026-04-16.md:503:505 -->
+- - Candidate: Possible Lasting Truths: - Complements Gemini models (Google's proprietary line) ### Notes - Greg forwarded this for my information - Potentially relevant for Pi deployment given efficiency claims - Apache 2.0 license removes commercial restrictions --- ## Workout Tracking - Day - confidence: 0.62 - evidence: memory/2026-04-14.md:323-325 [score=0.890 recalls=0 avg=0.620 source=memory/2026-04-16.md:428-430]
+<!-- openclaw-memory-promotion:memory:memory/2026-04-16.md:513:513 -->
+- **Date:** April 15-16, 2026 [score=0.890 recalls=0 avg=0.620 source=memory/2026-04-16.md:513-513]
+<!-- openclaw-memory-promotion:memory:memory/2026-04-16.md:522:525 -->
+- ) [score=0.890 recalls=0 avg=0.620 source=memory/2026-04-16.md:673-674]

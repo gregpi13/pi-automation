@@ -1,6 +1,6 @@
 {
   "startDate": "2026-04-07",
-  "endDate": "2026-04-21",
+  "endDate": "2026-04-23",
   "targetWeightLossLbs": 10,
   "currentWeightLbs": 195,
   "targetWeightLbs": 186,
@@ -140,6 +140,14 @@
       "workout_type": "cardio + pushups",
       "duration_minutes": 30,
       "notes": "Day 16 (maintenance): 195 lbs, 25 min bike, 31 pushups. Morning workout."
+    },
+    {
+      "date": "2026-04-23",
+      "weight": null,
+      "workout_completed": true,
+      "workout_type": "strength + cardio",
+      "duration_minutes": 45,
+      "notes": "20min bike, 32 pushups, 2x15 all exercises (bench press, shoulder, biceps, back rows, squats), no weigh-in"
     }
   ],
   "status": "maintenance"
